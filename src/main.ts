@@ -79,6 +79,15 @@ const map = new maplibregl.Map({
         tileSize: 256,
         attribution: "ハザードマップポータルサイト",
       },
+      skhb: {
+        type: "vector",
+        tiles: [
+          `${location.href.replace("/index.html", "")}/skhb/{z}/{x}/{y}.pbf`,
+        ],
+        minzoom: 5,
+        maxzoom: 8,
+        attribution: "緊急避難場所データ",
+      },
     },
     layers: [
       {
@@ -127,6 +136,18 @@ const map = new maplibregl.Map({
         type: "raster",
         paint: { "raster-opacity": 0.7 },
         layout: { visibility: "none" },
+      },
+      {
+        id: "skhb-layer",
+        source: "skhb",
+        "source-layer": "skhb",
+        type: "circle",
+        paint: {
+          "circle-color": "#6666cc",
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 14, 6],
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#ffffff",
+        },
       },
     ],
   },
