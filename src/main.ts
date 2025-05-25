@@ -195,4 +195,9 @@ map.on("load", () => {
       map.getCanvas().style.cursor = "";
     }
   });
+
+  const geolocationControl = new maplibregl.GeolocateControl({
+    trackUserLocation: true,
+  });
+  map.addControl(geolocationControl, "bottom-right");
 });
