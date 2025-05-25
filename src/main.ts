@@ -148,6 +148,7 @@ const map = new maplibregl.Map({
           "circle-stroke-width": 1,
           "circle-stroke-color": "#ffffff",
         },
+        // filter: ["get", "disaster4"], // なぜかフィルタできず、何も表示されなくなってしまう…
       },
     ],
   },
@@ -165,4 +166,33 @@ map.on("load", () => {
     },
   });
   map.addControl(opacity, "top-left");
+
+  map.on("click", (e) => {
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: ["skhb-layer"],
+    });
+    if (features.length === 0) return;
+
+    const feature = features[0];
+    console.log(feature);
+    const popup = new maplibregl.Popup()
+      .setLngLat(feature.geometry.coordinates) // コンパイルエラーになってるが動く。型を誤認している？
+      .setHTML(
+        `\
+      <div>${feature.properties.name}</div>`
+      )
+      .addTo(map);
+  });
+
+  map.on("mousemove", (e) => {
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: ["skhb-layer"],
+    });
+
+    if (features.length > 0) {
+      map.getCanvas().style.cursor = "pointer";
+    } else {
+      map.getCanvas().style.cursor = "";
+    }
+  });
 });
